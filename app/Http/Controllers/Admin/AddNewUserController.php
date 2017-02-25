@@ -27,7 +27,7 @@ class AddNewUserController extends Controller
 
         return view('admin/addUser', ['departments' => $departments, 'roles'=>$roles, 'status' => $status]);
     }
-
+/*Переделать на транзакции*/
     public function saveUser(Request $request){
 
             $user_id = Auth::user()->id;
@@ -36,9 +36,10 @@ class AddNewUserController extends Controller
                 [
                     'name' => $request->uName,
                     'email' => $request->uEmail,
-                    'password' => $request->uPassword,
+                    'password' => bcrypt($request->uPassword),
                     'role' => $request->uRole,
                     'status' => $request->uStatus,
+                    'user_parent' => $user_id,
                 ]
             );
 
