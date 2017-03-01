@@ -13,7 +13,7 @@ var daysName = new Array("Пон","Вт","СР");
 function getDaysArray(year, month) {
     var numDaysInMonth, daysInWeek, daysIndex, index, i, l, daysArray;
 
-    numDaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    zzzz = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     daysInWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     daysIndex = { 'Sun': 0, 'Mon': 1, 'Tue': 2, 'Wed': 3, 'Thu': 4, 'Fri': 5, 'Sat': 6 };
     index = daysIndex[(new Date(year, month - 1, 1)).toString().split(' ')[0]];

@@ -19,6 +19,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index');
 Route::get('/timesheets', 'TimeSheetsController@showTimeSheets');
+Route::get('/getJsonData', 'TimeSheetsController@getJsonData');
 
 Route::get('/projects', 'ProjectController@showProjects');
 Route::get('/projects/add', 'ProjectController@addProject');
@@ -35,3 +36,5 @@ Route::post('/admin/saveDepartments', 'Admin\DepartmentController@saveDepartment
 Route::get('/admin/showClients', 'Admin\CustomerController@showClients');
 Route::get('/admin/addClient', 'Admin\CustomerController@addClient');
 Route::post('admin/saveClient', 'Admin\CustomerController@saveClient');
+
+
