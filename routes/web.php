@@ -19,7 +19,13 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index');
 Route::get('/timesheets', 'TimeSheetsController@showTimeSheets');
-Route::get('/getJsonData', 'TimeSheetsController@getJsonData');
+Route::post('/getJsonData', 'TimeSheetsController@getJsonData');
+Route::post('/getCalendarDate', 'TimeSheetsController@getCalendarDate');
+Route::post('/getDataToSave', 'TimeSheetsController@getDataToSave');
+Route::post('/addNewRecord', 'TimeSheetsController@addNewRecord');
+Route::post('/deleteRecord', 'TimeSheetsController@deleteRecord');
+
+
 
 Route::get('/projects', 'ProjectController@showProjects');
 Route::get('/projects/add', 'ProjectController@addProject');

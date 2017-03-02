@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,14 +12,29 @@
 
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
+    <link href="/css/bootstrap-datepaginator.css" rel="stylesheet">
 
     <!-- Scripts -->
+    <script src="/js/app.js"></script>
+    <script src="/js/moment.js"></script>
+    <script src="/js/bootstrap-datepicker.js"></script>
+    <script src="/js/bootstrap-datepaginator.js"></script>
+
     <script>
         window.Laravel = <?php echo json_encode([
             'csrfToken' => csrf_token(),
         ]); ?>
     </script>
-    <script src="/js/calendar.js"> </script>
+
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
+
+
 </head>
 <body>
     <nav class="navbar navbar-default navbar-static-top">
@@ -81,6 +96,9 @@
     @yield('content')
 
     <!-- Scripts -->
-    <script src="/js/app.js"></script>
+
+
+
+
 </body>
 </html>
