@@ -33,7 +33,13 @@ class TimeSheetsController extends Controller
             ->where('projects_users.user_id', $user_id)
             ->get();
 
-        return view('/time/timesheets', ['projects' => $projects]);
+        $categories = DB::table('categories')
+            ->select('categories.id','categories.name')
+            ->join('categories_users', 'categories_users.category_id', '=', 'categories.id' )
+            ->where('categories_users.user_id', $user_id)
+            ->get();
+
+        return view('/time/timesheets', ['projects' => $projects, 'categories' => $categories]);
     }
 
     public function getCalendarDate(Request $request){

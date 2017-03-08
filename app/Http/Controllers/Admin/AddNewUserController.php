@@ -16,12 +16,26 @@ class AddNewUserController extends Controller
     }
 
     public function showUsers(){
-        return view('admin\showUsers');
+
+        $user_id = Auth::user()->id;
+
+        $users = DB::table('users')
+            ->where('users.user_parent', $user_id)
+            ->get();
+
+        return view('/admin/showUsers', ['users' => $users]);
     }
 
     public function addUser()
     {
-        $departments = DB::table('departments')->get();
+        $user_id = Auth::user()->id;
+
+        $departments = DB::table('departments')
+            ->join('departments_users', 'departments_users.department_id', '=', 'departments.id')
+            ->where('departments_users.user_id', $user_id)
+            ->get();
+
+
         $roles = DB::table('roles')->get();
         $status = DB::table('users_status')->get();
 
@@ -43,7 +57,7 @@ class AddNewUserController extends Controller
                 ]
             );
 
-            DB::table('departments_users')->insert(
+            DB::table('users_departments')->insert(
                 [
                     'department_id' => $request->uDepartment,
                     'user_id' => $new_user_id,

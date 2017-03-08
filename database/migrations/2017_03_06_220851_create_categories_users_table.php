@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddDescriptionToTimesheets extends Migration
+class CreateCategoriesUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class AddDescriptionToTimesheets extends Migration
      */
     public function up()
     {
-        Schema::table('timesheet', function($table){
-            $table->string('description');
+        Schema::create('categories_users', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('category_id');
+            $table->integer('user_id');
+            $table->timestamps();
         });
     }
 
@@ -25,6 +28,6 @@ class AddDescriptionToTimesheets extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('categories_users');
     }
 }

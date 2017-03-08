@@ -57,10 +57,16 @@
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
-                <ul class="nav navbar-nav">
-                    &nbsp;
+                @if (!(Auth::guest()))
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a href="{{url('/timesheets')}}">Timesheets</a></li>
+                    <li><a href="{{url('/projects')}}">Projects</a></li>
+                    <li><a href="{{url('/admin/showDepartments')}}">Departments</a></li>
+                    <li><a href="{{url('/admin/showUsers')}}">Users</a></li>
+                    <li><a href="{{url('/admin/showCategories')}}">Categories</a></li>
+                    <li><a href="{{url('/admin/showClients')}}">Clients</a></li>
                 </ul>
-
+                @endif
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->

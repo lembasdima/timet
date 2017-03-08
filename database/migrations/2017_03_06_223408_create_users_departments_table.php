@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateFieldsTypeInTimesheets extends Migration
+class CreateUsersDepartmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class UpdateFieldsTypeInTimesheets extends Migration
      */
     public function up()
     {
-        Schema::table('timesheet', function($table){
-            $table->integer('project_id')->nullable();
-            $table->integer('category_id')->nullable();
-            $table->integer('worked_time')->nullable();
-            $table->date('logged_date')->nullable();
+        Schema::create('users_departments', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('user_id');
+            $table->integer('department_id');
+            $table->timestamps();
         });
     }
 
@@ -28,6 +28,6 @@ class UpdateFieldsTypeInTimesheets extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('users_departments');
     }
 }

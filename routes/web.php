@@ -39,6 +39,10 @@ Route::get('/admin/showDepartments', 'Admin\DepartmentController@showDepartments
 Route::get('/admin/addDepartments', 'Admin\DepartmentController@addDepartments');
 Route::post('/admin/saveDepartments', 'Admin\DepartmentController@saveDepartments');
 
+Route::get('/admin/showCategories', 'Admin\CategoryController@showCategories');
+Route::get('/admin/addCategories', 'Admin\CategoryController@addCategories');
+Route::post('/admin/saveCategories', 'Admin\CategoryController@saveCategories');
+
 Route::get('/admin/showClients', 'Admin\CustomerController@showClients');
 Route::get('/admin/addClient', 'Admin\CustomerController@addClient');
 Route::post('admin/saveClient', 'Admin\CustomerController@saveClient');

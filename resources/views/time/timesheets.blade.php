@@ -6,24 +6,7 @@
 
 		var projectName = <?php echo json_encode($projects); ?>
 
-		var categotyName = [
-			{
-				'id': 1,
-				'name': 'CAT1',
-			},
-			{
-				'id': 2,
-				'name': 'CAT2',
-			},
-			{
-				'id': 3,
-				'name': 'CAT3',
-			},
-			{
-				'id': 4,
-				'name': 'CAT4',
-			}
-		];
+		var categoryName = <?php  echo json_encode($categories); ?>
 
 		function undefinedToString(data){
 			if(!data){
@@ -51,7 +34,7 @@
 			var rowHTML = "<tr data-timesheet-id='" + data.id + "'>";
 
 			rowHTML += wrapTag(renderSelect(data.project_id, projectName, 'projects'),'td')
-			rowHTML += wrapTag(renderSelect(data.category_id, categotyName, 'categories'),'td')
+			rowHTML += wrapTag(renderSelect(data.category_id, categoryName, 'categories'),'td')
 			rowHTML += wrapTag('<input class="form-control" type="text" value="' + undefinedToString(data.description) + '" name="description">','td')
 			rowHTML += wrapTag('<input class="form-control" type="text" value="' + undefinedToString(data.worked_time) + '" name="workedTime">','td')
 			rowHTML += wrapTag("<a href='#' class='deleteTimeRowRecord'>Remove</a>",'td')
@@ -72,6 +55,7 @@
 			data.workedTime = $rowToSave.find('input[name=workedTime]').val();
 
 			return data;
+
 		}
 
 		function saveData(dataSave){
@@ -98,6 +82,12 @@
 					alert('Возникла ошибка: ' + xhr.responseCode);
 				}
 			});
+		}
+
+		function formatTime(){
+			//y,m,w,d,h,m,s
+
+
 		}
 	</script>
 

@@ -16,7 +16,14 @@ class CustomerController extends Controller
     }
 
     public function showClients(){
-        return view('admin\showClients');
+        $user_id = Auth::user()->id;
+
+        $clients = DB::table('clients')
+            ->join('clients_users', 'clients.id', '=', 'clients_users.client_id' )
+            ->where('clients_users.user_id', $user_id)
+            ->get();
+
+        return view('admin\showClients',['clients' => $clients]);
     }
 
     public function addClient(){

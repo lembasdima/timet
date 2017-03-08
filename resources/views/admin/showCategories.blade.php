@@ -2,12 +2,11 @@
 /**
  * Created by PhpStorm.
  * User: Dima
- * Date: 24.02.2017
- * Time: 21:12
+ * Date: 07.03.2017
+ * Time: 0:49
  */
 ?>
-
-@extends('layouts.app')
+@extends('layouts.app');
 
 @section('content')
     <div class="container">
@@ -19,16 +18,16 @@
                         <th>ID</th>
                         <th>Code</th>
                         <th>Name</th>
-                        <th>Status</th>
+                        <th>Description</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($clients as $client)
+                    @foreach($categories as $category)
                         <tr>
-                            <td>{{$client->id}}</td>
-                            <td>{{$client->code}}</td>
-                            <td>{{$client->name}}</td>
-                            <td>{{$client->status}}</td>
+                            <td>{{$category->id}}</td>
+                            <td>{{$category->code}}</td>
+                            <td>{{$category->name}}</td>
+                            <td>{{$category->description}}</td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -36,11 +35,10 @@
             </div>
         </div>
     </div>
-
     <div class="container">
         <div class="row">
             <div class="col-md-2">
-                <a href="{{ url('/admin/addClient') }}" ><input class="btn btn-success" type="submit" value="Add Client"></a> <br />
+                <a href="{{ url('/admin/addCategories') }}" ><input class="btn btn-success" type="submit" value="Add Category"></a> <br />
             </div>
             <div class="col-md-10">
 
@@ -48,3 +46,4 @@
         </div>
     </div>
 @endsection
+

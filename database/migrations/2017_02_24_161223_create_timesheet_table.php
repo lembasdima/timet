@@ -16,10 +16,11 @@ class CreateTimesheetTable extends Migration
         Schema::create('timesheet', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
-            $table->integer('project_id');
-            $table->integer('category_id');
-            $table->integer('worked_time');
-            $table->timestamp('logged_date');
+            $table->integer('project_id')->nullable();
+            $table->integer('category_id')->nullable();
+            $table->string('description')->nullable();
+            $table->integer('worked_time')->nullable();
+            $table->date('logged_date')->nullable();
             $table->timestamps();
         });
     }
