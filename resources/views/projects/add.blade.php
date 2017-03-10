@@ -23,7 +23,7 @@
 							<label class="col-md-4">Project Type</label>
 							<select class="form-control" name="ptype">
 								@foreach($typeOfProjects as $selectedType){
-								<option value="{{$selectedType->id}}">{{$selectedType->type_name}}</option>
+									<option value="{{$selectedType->id}}">{{$selectedType->type_name}}</option>
 								@endforeach
 							</select>
 						</div>
@@ -35,7 +35,12 @@
 							<input class="form-control" type="text" name="pdesc">
 
 							<label class="col-md-4">Customer</label>
-							<input class="form-control" type="text" name="pcustomer">
+							<select class="form-control" name="pcustomer">
+								@foreach($customers as $customer){
+								<?php //var_dump($customer);?>
+									<option value="{{$customer->id}}">{{$customer->name}}</option>
+								@endforeach
+							</select>
 
 							<label class="col-md-4">Budget in time</label>
 							<input class="form-control" type="text" name="pbudgettime">

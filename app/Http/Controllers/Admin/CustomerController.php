@@ -16,40 +16,49 @@ class CustomerController extends Controller
     }
 
     public function showClients(){
-        $user_id = Auth::user()->id;
 
-        $clients = DB::table('clients')
-            ->join('clients_users', 'clients.id', '=', 'clients_users.client_id' )
-            ->where('clients_users.user_id', $user_id)
-            ->get();
+        if(Auth::user()->hasRole(1)) {
+            $user_id = Auth::user()->id;
 
-        return view('admin\showClients',['clients' => $clients]);
+            $clients = DB::table('clients')
+                ->join('clients_users', 'clients.id', '=', 'clients_users.client_id')
+                ->where('clients_users.user_id', $user_id)
+                ->get();
+
+            return view('admin\showClients', ['clients' => $clients]);
+        }
+        return view('404');
     }
 
     public function addClient(){
-
-
-        return view('admin\addClient');
+        if(Auth::user()->hasRole(1)) {
+            return view('admin\addClient');
+        }
+        return view('404');
     }
     /*Переделать на транзакции*/
     public function saveClient(Request $request){
-        $user_id = Auth::user()->id;
 
-        $new_client_id = DB::table('clients')->insertGetId(
-            [
-                'name' => $request->clientName,
-                'code' => $request->clientCode,
-                'status' => $request->clientStatus,
-            ]
-        );
+        if(Auth::user()->hasRole(1)) {
+            $user_id = Auth::user()->id;
 
-        DB::table('clients_users')->insert(
-            [
-                'client_id' => $new_client_id,
-                'user_id' => $user_id,
-            ]
+            $new_client_id = DB::table('clients')->insertGetId(
+                [
+                    'name' => $request->clientName,
+                    'code' => $request->clientCode,
+                    'status' => $request->clientStatus,
+                ]
+            );
 
-        );
-        return redirect()->action('Admin\CustomerController@showClients');
+            DB::table('clients_users')->insert(
+                [
+                    'client_id' => $new_client_id,
+                    'user_id' => $user_id,
+                ]
+
+            );
+            return redirect()->action('Admin\CustomerController@showClients');
+        }
+        return view('404');
     }
 }

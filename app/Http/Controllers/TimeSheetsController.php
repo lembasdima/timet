@@ -21,22 +21,33 @@ class TimeSheetsController extends Controller
     {
         $user_id = Auth::user()->id;
 
+        $user_parent = DB::table('users')
+            ->where('users.id', $user_id)
+            ->first();
+
+        if(!$user_parent->user_parent){
+            $parent = $user_id;
+        }
+        else{
+            $parent = $user_parent->user_parent;
+        }
+
         $project_id = DB::table('projects_users')
             ->select('projects_users.project_id')
-            ->where('projects_users.user_id', $user_id)
+            ->where('projects_users.user_id', $parent)
             ->get();
 
 
         $projects = DB::table('projects')
             ->select('projects.id', 'projects.project_name as name')
             ->join('projects_users', 'projects_users.project_id', '=', 'projects.id')
-            ->where('projects_users.user_id', $user_id)
+            ->where('projects_users.user_id', $parent)
             ->get();
 
         $categories = DB::table('categories')
             ->select('categories.id','categories.name')
             ->join('categories_users', 'categories_users.category_id', '=', 'categories.id' )
-            ->where('categories_users.user_id', $user_id)
+            ->where('categories_users.user_id', $parent)
             ->get();
 
         return view('/time/timesheets', ['projects' => $projects, 'categories' => $categories]);

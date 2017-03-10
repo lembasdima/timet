@@ -17,33 +17,63 @@ class AddNewUserController extends Controller
 
     public function showUsers(){
 
-        $user_id = Auth::user()->id;
+        if(Auth::user()->hasRole(1) || Auth::user()->hasRole(2)) {
+            $user_id = Auth::user()->id;
 
-        $users = DB::table('users')
-            ->where('users.user_parent', $user_id)
-            ->get();
+            $user_parent = DB::table('users')
+                ->where('users.id', $user_id)
+                ->first();
 
-        return view('/admin/showUsers', ['users' => $users]);
+            if(!$user_parent->user_parent){
+                $parent = $user_id;
+            }
+            else{
+                $parent = $user_parent->user_parent;
+            }
+
+            $users = DB::table('users')
+                ->where('users.user_parent', $parent)
+                ->get();
+
+            return view('/admin/showUsers', ['users' => $users]);
+        }
+        return view('404');
     }
 
     public function addUser()
     {
-        $user_id = Auth::user()->id;
+        if(Auth::user()->hasRole(1) || Auth::user()->hasRole(2)) {
+            $user_id = Auth::user()->id;
 
-        $departments = DB::table('departments')
-            ->join('departments_users', 'departments_users.department_id', '=', 'departments.id')
-            ->where('departments_users.user_id', $user_id)
-            ->get();
+            $user_parent = DB::table('users')
+                ->where('users.id', $user_id)
+                ->first();
+
+            if(!$user_parent->user_parent){
+                $parent = $user_id;
+            }
+            else{
+                $parent = $user_parent->user_parent;
+            }
+
+            $departments = DB::table('departments')
+                ->join('departments_users', 'departments_users.department_id', '=', 'departments.id')
+                ->where('departments_users.user_id', $parent)
+                ->get();
 
 
-        $roles = DB::table('roles')->get();
-        $status = DB::table('users_status')->get();
+            $roles = DB::table('roles')->get();
+            $status = DB::table('users_status')->get();
 
-        return view('admin/addUser', ['departments' => $departments, 'roles'=>$roles, 'status' => $status]);
+
+            return view('admin/addUser', ['departments' => $departments, 'roles' => $roles, 'status' => $status]);
+        }
+        return view('404');
     }
 /*Переделать на транзакции*/
     public function saveUser(Request $request){
 
+        if(Auth::user()->hasRole(1) || Auth::user()->hasRole(2)) {
             $user_id = Auth::user()->id;
 
             $new_user_id = DB::table('users')->insertGetId(
@@ -71,5 +101,7 @@ class AddNewUserController extends Controller
                 ]
             );
             return redirect()->action('Admin\AddNewUserController@showUsers');
+        }
+        return view('404');
     }
 }

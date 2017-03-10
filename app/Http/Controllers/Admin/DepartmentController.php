@@ -17,14 +17,28 @@ class DepartmentController extends Controller
 
     public function showDepartments(){
 
-        $user_id = Auth::user()->id;
+        if(Auth::user()->hasRole(1) || Auth::user()->hasRole(2)) {
+            $user_id = Auth::user()->id;
 
-        $department = DB::table('departments')
-            ->join('departments_users', 'departments_users.department_id', '=', 'departments.id')
-            ->where('departments_users.user_id', $user_id)
-            ->get();
+            $user_parent = DB::table('users')
+                ->where('users.id', $user_id)
+                ->first();
 
-        return view('/admin/showDepartments', ['departments' => $department]);
+            if(!$user_parent->user_parent){
+                $parent = $user_id;
+            }
+            else{
+                $parent = $user_parent->user_parent;
+            }
+
+            $department = DB::table('departments')
+                ->join('departments_users', 'departments_users.department_id', '=', 'departments.id')
+                ->where('departments_users.user_id', $parent)
+                ->get();
+
+            return view('/admin/showDepartments', ['departments' => $department]);
+        }
+        return view('404');
     }
 
     public function addDepartments(){
@@ -34,23 +48,25 @@ class DepartmentController extends Controller
 
     public function saveDepartments(Request $request){
 
-        $user_id = Auth::user()->id;
+        if(Auth::user()->hasRole(1)) {
+            $user_id = Auth::user()->id;
 
-        $new_department_id = DB::table('departments')->insertGetId(
-            [
-                'department_code' => $request->depCode,
-                'department_name' => $request->depName,
-            ]
-        );
+            $new_department_id = DB::table('departments')->insertGetId(
+                [
+                    'department_code' => $request->depCode,
+                    'department_name' => $request->depName,
+                ]
+            );
 
-        DB::table('departments_users')->insert(
-            [
-                'department_id' => $new_department_id,
-                'user_id' => $user_id,
-            ]
-        );
+            DB::table('departments_users')->insert(
+                [
+                    'department_id' => $new_department_id,
+                    'user_id' => $user_id,
+                ]
+            );
 
-        return redirect()->action('Admin\DepartmentController@showDepartments');
-        //return view('/admin/showDepartments');
+            return redirect()->action('Admin\DepartmentController@showDepartments');
+        }
+        return view('404');
     }
 }

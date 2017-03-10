@@ -17,6 +17,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
+
 Route::get('/home', 'HomeController@index');
 Route::get('/timesheets', 'TimeSheetsController@showTimeSheets');
 Route::post('/getJsonData', 'TimeSheetsController@getJsonData');

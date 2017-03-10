@@ -17,41 +17,62 @@ class CategoryController extends Controller
 
     public function showCategories(){
 
-        $user_id = Auth::user()->id;
+        if(Auth::user()->hasRole(1) || Auth::user()->hasRole(2)) {
+            $user_id = Auth::user()->id;
 
-        $categories = DB::table('categories')
-            ->join('categories_users', 'categories_users.category_id', '=', 'categories.id')
-            ->where('categories_users.user_id', $user_id)
-            ->get();
+            $user_parent = DB::table('users')
+                ->where('users.id', $user_id)
+                ->first();
 
-        return view('/admin/showCategories', ['categories' => $categories]);
+            if(!$user_parent->user_parent){
+                $parent = $user_id;
+            }
+            else{
+                $parent = $user_parent->user_parent;
+            }
 
+            $categories = DB::table('categories')
+                ->join('categories_users', 'categories_users.category_id', '=', 'categories.id')
+                ->where('categories_users.user_id', $parent)
+                ->get();
+
+            return view('/admin/showCategories', ['categories' => $categories]);
+        }
+
+        return view('404');
     }
 
     public function addCategories(){
 
-        return view('/admin/addCategory');
+        if(Auth::user()->hasRole(1)) {
+            return view('/admin/addCategory');
+        }
+        return view('404');
     }
 
     public function saveCategories(Request $request){
 
-        $user_id = Auth::user()->id;
+        if(Auth::user()->hasRole(1)) {
 
-        $new_category_id = DB::table('categories')->insertGetId(
-            [
-                'code' => $request->categoryCode,
-                'name' => $request->categoryName,
-                'description' => $request->categoryDescr,
-            ]
-        );
+            $user_id = Auth::user()->id;
 
-        DB::table('categories_users')->insert(
-            [
-                'category_id' => $new_category_id,
-                'user_id' => $user_id,
-            ]
-        );
-        return redirect()->action('Admin\CategoryController@showCategories');
-        //return view('/admin/showDepartments');
+            $new_category_id = DB::table('categories')->insertGetId(
+                [
+                    'code' => $request->categoryCode,
+                    'name' => $request->categoryName,
+                    'description' => $request->categoryDescr,
+                ]
+            );
+
+            DB::table('categories_users')->insert(
+                [
+                    'category_id' => $new_category_id,
+                    'user_id' => $user_id,
+                ]
+            );
+            return redirect()->action('Admin\CategoryController@showCategories');
+            //return view('/admin/showDepartments');
+        }
+        return view('404');
     }
 }
