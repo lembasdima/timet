@@ -25,11 +25,11 @@
 						<td>{{$project->project_type}}</td>
 						<td>{{$project->project_name}}</td>
 						<td>{{$project->project_description}}</td>
-						<td>{{$project->project_customer}}</td>
+						<td>{{$project->clName}}</td>
 						<td>{{$project->project_budget_time}}</td>
 						<td>{{$project->project_budget_money}}</td>
-						<td>{{$project->project_lead}}</td>
-						<td>{{$project->project_status}}</td>
+						<td>{{$project->uName}}</td>
+						<td>{{$project->status_name}}</td>
 					</tr>
 					@endforeach
 				</tbody>

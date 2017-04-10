@@ -19,29 +19,29 @@ class ProjectController extends AuthorizationController
 
 	public function showProjects(){
 
-		if(Auth::user()->hasRole($this->roles['admin']) || Auth::user()->hasRole($this->roles['manager'])){
+        if(Auth::user()->hasRole(1) || Auth::user()->hasRole(2)){
 
-			$user_id = Auth::user()->id;
+            $projects = DB::table('projects')
+                ->join('projects_users', 'projects.id', '=', 'projects_users.project_id' )
+                ->join('projects_status', 'projects.project_status', '=', 'projects_status.id')
+                ->leftJoin('users', 'projects.project_lead', '=', 'users.id')
+                ->join('clients as cl', 'projects.project_customer', '=', 'cl.id');
 
-			$user_parent = DB::table('users')
-				->where('users.id', $user_id)
-				->first();
+            $projects->where([
+                ['projects.company_id', Auth::user()->company_id],
+            ]);
 
-			//var_dump($user_parent->user_parent);
+            /*На будущее*/
+			if(Auth::user()->hasRole(2)){
 
-			if(!$user_parent->user_parent){
-				$parent = $user_id;
-			}
-			else{
-				$parent = $user_parent->user_parent;
-			}
+            }
 
-			$projects = DB::table('projects')
-				->join('projects_users', 'projects.id', '=', 'projects_users.project_id' )
-				->where('projects_users.user_id', $parent)
-				->get();
+            $projects->select('*', 'users.name as uName', 'cl.name as clName');
 
-			return view('/projects/projects', ['projects' => $projects]);
+
+
+
+			return view('/projects/projects', ['projects' => $projects->get()->toArray()]);
 		}
 		return view('404');
 	}
@@ -59,7 +59,11 @@ class ProjectController extends AuthorizationController
 
 			$typeOfProjects = $typeOfProjects->toArray();
 
-			return view('/projects/add', compact('id', 'name'), ['typeOfProjects' => $typeOfProjects, 'customers' => $customers]);
+			$projectLead = DB::table('users')
+                ->where('users.company_id', Auth::user()->company_id)
+                ->get();
+
+			return view('/projects/add', compact('id', 'name'), ['typeOfProjects' => $typeOfProjects, 'customers' => $customers, 'projectLead' => $projectLead]);
 		}
 		return view('404');
 	}
@@ -79,8 +83,9 @@ class ProjectController extends AuthorizationController
 					'project_customer' => $request->pcustomer,
 					'project_budget_time' => $request->pbudgettime,
 					'project_budget_money' => $request->pbudgetmoney,
-					'project_lead' => $request->plead,
+					'project_lead' => (empty($request->plead)) ? NULL : $request->plead, /*Заменить IF*/
 					'project_status' => 1,
+                    'company_id' => Auth::user()->company_id,
 				]
 			);
 

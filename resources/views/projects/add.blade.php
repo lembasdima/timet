@@ -36,8 +36,7 @@
 
 							<label class="col-md-4">Customer</label>
 							<select class="form-control" name="pcustomer">
-								@foreach($customers as $customer){
-								<?php //var_dump($customer);?>
+								@foreach($customers as $customer)
 									<option value="{{$customer->id}}">{{$customer->name}}</option>
 								@endforeach
 							</select>
@@ -49,7 +48,12 @@
 							<input class="form-control" type="text" name="pbudgetmoney">
 
 							<label class="col-md-4">Project Lead</label>
-							<input class="form-control" type="text" name="plead">
+							<select name="plead" id="" class="form-control">
+								<option value="">Select Project Lead</option>
+								@foreach($projectLead as $lead)
+									<option value="{{$lead->id}}">{{$lead->name}}</option>
+								@endforeach
+							</select>
 
 							<input class="btn btn-success" type="submit" value="Add project">
 						</div>

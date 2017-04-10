@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
 			$table->integer('role');
 			$table->integer('status');
             $table->integer('user_parent')->nullable();
+            $table->integer('company_id');
             $table->rememberToken();
             $table->timestamps();
         });

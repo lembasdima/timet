@@ -18,24 +18,23 @@ class AddNewUserController extends Controller
     public function showUsers(){
 
         if(Auth::user()->hasRole(1) || Auth::user()->hasRole(2)) {
-            $user_id = Auth::user()->id;
-
-            $user_parent = DB::table('users')
-                ->where('users.id', $user_id)
-                ->first();
-
-            if(!$user_parent->user_parent){
-                $parent = $user_id;
-            }
-            else{
-                $parent = $user_parent->user_parent;
-            }
 
             $users = DB::table('users')
-                ->where('users.user_parent', $parent)
-                ->get();
+                ->join('statuses', 'users.status', '=', 'statuses.id')
+                ->join('roles', 'users.role', '=', 'roles.id');
 
-            return view('/admin/showUsers', ['users' => $users]);
+            if(Auth::user()->hasRole(1)){
+
+                $users->where([
+                    ['users.company_id', Auth::user()->company_id],
+                    ['users.id', '!=', Auth::user()->id]
+                ]);
+            }
+            else{
+                $users->where('users.user_parent', Auth::user()->id);
+            }
+
+            return view('/admin/showUsers', ['users' => $users->get()->toArray()]);
         }
         return view('404');
     }
@@ -63,7 +62,7 @@ class AddNewUserController extends Controller
 
 
             $roles = DB::table('roles')->get();
-            $status = DB::table('users_status')->get();
+            $status = DB::table('statuses')->get();
 
 
             return view('admin/addUser', ['departments' => $departments, 'roles' => $roles, 'status' => $status]);
@@ -74,7 +73,6 @@ class AddNewUserController extends Controller
     public function saveUser(Request $request){
 
         if(Auth::user()->hasRole(1) || Auth::user()->hasRole(2)) {
-            $user_id = Auth::user()->id;
 
             $new_user_id = DB::table('users')->insertGetId(
                 [
@@ -83,7 +81,8 @@ class AddNewUserController extends Controller
                     'password' => bcrypt($request->uPassword),
                     'role' => $request->uRole,
                     'status' => $request->uStatus,
-                    'user_parent' => $user_id,
+                    'user_parent' => Auth::user()->id,
+                    'company_id' => Auth::user()->company_id,
                 ]
             );
 

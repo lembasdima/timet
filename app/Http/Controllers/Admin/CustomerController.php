@@ -22,6 +22,7 @@ class CustomerController extends Controller
 
             $clients = DB::table('clients')
                 ->join('clients_users', 'clients.id', '=', 'clients_users.client_id')
+                ->join('statuses', 'clients.status', '=', 'statuses.id')
                 ->where('clients_users.user_id', $user_id)
                 ->get();
 
@@ -32,7 +33,10 @@ class CustomerController extends Controller
 
     public function addClient(){
         if(Auth::user()->hasRole(1)) {
-            return view('admin\addClient');
+
+            $status = DB::table('statuses')->get();
+
+            return view('admin\addClient',['status' => $status]);
         }
         return view('404');
     }
@@ -40,24 +44,26 @@ class CustomerController extends Controller
     public function saveClient(Request $request){
 
         if(Auth::user()->hasRole(1)) {
-            $user_id = Auth::user()->id;
 
-            $new_client_id = DB::table('clients')->insertGetId(
-                [
-                    'name' => $request->clientName,
-                    'code' => $request->clientCode,
-                    'status' => $request->clientStatus,
-                ]
-            );
+            if(!empty($request->clientName && $request->clientCode)){
+                $new_client_id = DB::table('clients')->insertGetId(
+                    [
+                        'name' => $request->clientName,
+                        'code' => $request->clientCode,
+                        'status' => $request->clientStatus,
+                    ]
+                );
 
-            DB::table('clients_users')->insert(
-                [
-                    'client_id' => $new_client_id,
-                    'user_id' => $user_id,
-                ]
+                DB::table('clients_users')->insert(
+                    [
+                        'client_id' => $new_client_id,
+                        'user_id' => Auth::user()->id,
+                        'company_id' => Auth::user()->company_id,
+                    ]
 
-            );
-            return redirect()->action('Admin\CustomerController@showClients');
+                );
+                return redirect()->action('Admin\CustomerController@showClients');
+            }
         }
         return view('404');
     }

@@ -20,7 +20,7 @@ class CreateProjectsTable extends Migration
 			$table->integer('project_customer')->nullable();
 			$table->integer('project_budget_time')->nullable();
 			$table->float('project_budget_money')->nullable();
-			$table->string('project_lead')->nullable();
+			$table->integer('project_lead')->nullable();
 			$table->integer('project_type');
 			$table->integer('project_status');
 		});

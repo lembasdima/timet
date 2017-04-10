@@ -25,6 +25,7 @@
             </div>
         </div>
     </div>
+    @if(Auth::user()->hasRole(1))
     <div class="container">
         <div class="row">
             <div class="col-md-2">
@@ -35,4 +36,5 @@
             </div>
         </div>
     </div>
+    @endif
 @endsection

@@ -54,24 +54,25 @@ class CategoryController extends Controller
 
         if(Auth::user()->hasRole(1)) {
 
-            $user_id = Auth::user()->id;
+            if(!empty($request->categoryCode && $request->categoryName)){
+                $new_category_id = DB::table('categories')->insertGetId(
+                    [
+                        'code' => $request->categoryCode,
+                        'name' => $request->categoryName,
+                        'description' => $request->categoryDescr,
+                    ]
+                );
 
-            $new_category_id = DB::table('categories')->insertGetId(
-                [
-                    'code' => $request->categoryCode,
-                    'name' => $request->categoryName,
-                    'description' => $request->categoryDescr,
-                ]
-            );
-
-            DB::table('categories_users')->insert(
-                [
-                    'category_id' => $new_category_id,
-                    'user_id' => $user_id,
-                ]
-            );
-            return redirect()->action('Admin\CategoryController@showCategories');
-            //return view('/admin/showDepartments');
+                DB::table('categories_users')->insert(
+                    [
+                        'category_id' => $new_category_id,
+                        'user_id' => Auth::user()->id,
+                        'company_id' => Auth::user()->company_id,
+                    ]
+                );
+                return redirect()->action('Admin\CategoryController@showCategories');
+                //return view('/admin/showDepartments');
+            }
         }
         return view('404');
     }

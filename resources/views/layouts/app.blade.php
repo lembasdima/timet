@@ -13,12 +13,17 @@
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/bootstrap-datepaginator.css" rel="stylesheet">
+    <link href="/vendor/bootstrap-datepicker/css/bootstrap-datetimepicker.css" rel="stylesheet">
 
     <!-- Scripts -->
     <script src="/js/app.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/3.0.0/jquery-migrate.js"></script>
     <script src="/js/moment.js"></script>
     <script src="/js/bootstrap-datepicker.js"></script>
     <script src="/js/bootstrap-datepaginator.js"></script>
+    <script src="/vendor/bootstrap-datepicker/js/bootstrap-datetimepicker.min.js"></script>
+
 
     <script>
         window.Laravel = <?php echo json_encode([

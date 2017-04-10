@@ -49,23 +49,24 @@ class DepartmentController extends Controller
     public function saveDepartments(Request $request){
 
         if(Auth::user()->hasRole(1)) {
-            $user_id = Auth::user()->id;
 
-            $new_department_id = DB::table('departments')->insertGetId(
-                [
-                    'department_code' => $request->depCode,
-                    'department_name' => $request->depName,
-                ]
-            );
+            if(!empty($request->depCode && $request->depName)){
+                $new_department_id = DB::table('departments')->insertGetId(
+                    [
+                        'department_code' => $request->depCode,
+                        'department_name' => $request->depName,
+                    ]
+                );
 
-            DB::table('departments_users')->insert(
-                [
-                    'department_id' => $new_department_id,
-                    'user_id' => $user_id,
-                ]
-            );
+                DB::table('departments_users')->insert(
+                    [
+                        'department_id' => $new_department_id,
+                        'user_id' => Auth::user()->id,
+                    ]
+                );
 
-            return redirect()->action('Admin\DepartmentController@showDepartments');
+                return redirect()->action('Admin\DepartmentController@showDepartments');
+            }
         }
         return view('404');
     }

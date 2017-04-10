@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\CompanyInfo;
 use App\User;
+use App\UsersCompany;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
 {
@@ -51,6 +54,7 @@ class RegisterController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
+            'company_name' => 'required'
         ]);
     }
 
@@ -62,6 +66,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        /*
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -69,5 +74,25 @@ class RegisterController extends Controller
 			'role' => 1,
 			'status' => 1,
         ]);
+        */
+
+        $copmany = CompanyInfo::create([
+            'name' => $data['company_name'],
+            'code' => '',
+            'url' => '',
+            'description' =>'',
+
+        ]);
+
+        $users = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
+            'role' => 1,
+            'status' => 1,
+            'company_id' => $copmany->id,
+        ]);
+
+        return $users;
     }
 }

@@ -28,7 +28,7 @@
                             <td>{{$client->id}}</td>
                             <td>{{$client->code}}</td>
                             <td>{{$client->name}}</td>
-                            <td>{{$client->status}}</td>
+                            <td>{{$client->status_name}}</td>
                         </tr>
                     @endforeach
                     </tbody>

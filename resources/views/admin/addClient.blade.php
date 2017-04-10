@@ -29,9 +29,9 @@
                <div class="form-group">
                    <label>Status</label>
                    <select name="clientStatus">
-                       <option value="1">Not approve</option>
-                       <option value="2">Pending</option>
-                       <option value="5">Approve</option>
+                       @foreach($status as $user_status)
+                           <option value="{{$user_status->id}}">{{$user_status->status_name}}</option>
+                       @endforeach
                    </select>
                </div>
 
