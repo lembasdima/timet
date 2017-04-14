@@ -18,6 +18,7 @@
                     <label>User name</label>
 
                     <select name="userName">
+                        <option value="">All</option>
                         @foreach($users as $user)
                             <option value="{{$user->id}}">{{$user->name}}</option>
                         @endforeach
@@ -28,6 +29,7 @@
                     <label>Customer</label>
 
                     <select name="customerName">
+                        <option value="">All</option>
                         @foreach($customers as $customer)
                             <option value="{{$customer->id}}">{{$customer->name}}</option>
                         @endforeach
@@ -37,6 +39,7 @@
                     <label>Project</label>
 
                     <select name="projectName">
+                        <option value="">All</option>
                         @foreach($projects as $project)
                             <option value="{{$project->id}}">{{$project->project_name}}</option>
                         @endforeach
@@ -47,6 +50,7 @@
                     <label>Categories</label>
 
                     <select name="categoriesName">
+                        <option value="">All</option>
                         @foreach($categories as $category)
                             <option value="{{$category->category_id}}">{{$category->name}}</option>
                         @endforeach
@@ -58,7 +62,7 @@
                         <div class='col-sm-6'>
                             <div class="form-group">
                                 <label>From</label>
-                                <div class='input-group date datetimepicker'>
+                                <div class='input-group date datetimepickerFrom'>
                                     <input type='text' class="form-control" name="dateFrom"/>
                                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
@@ -67,29 +71,40 @@
                             </div>
                         </div>
                         <script type="text/javascript">
+
+
                             $(function () {
-                                $('.datetimepicker').datetimepicker({
+
+                                var myDate = new Date();
+
+                                $('.datetimepickerFrom').datetimepicker({
                                     format: 'YYYY-MM-DD',
+                                    defaultDate: new Date(myDate.setDate(myDate.getDate() - 7))
+                                });
+
+                                $('.datetimepickerTo').datetimepicker({
+                                    format: 'YYYY-MM-DD',
+                                    defaultDate: new Date()
                                 });
 
                                 $('#showReportsResult').click(function () {
                                     var selectReportForm = $('#selectReportForm').serialize();
                                     $.post('/showReportResult', selectReportForm, function (data) {
-                                        console.log(data);
+
                                         var html = '';
                                         var totalTimeCount = 0;
                                         $.each(data.result,function(key, value){
-                                            console.log(value);
+
                                             html += "<tr><td>" + value.logged_date + "</td>" +
-                                                    "<td>" + value.user_id + "</td>" +
-                                                    "<td>" + value.project_id + "</td>" +
-                                                    "<td>" + value.category_id + "</td>" +
+                                                    "<td>" + value.userName + "</td>" +
+                                                    "<td>" + value.projectName + "</td>" +
+                                                    "<td>" + value.categoryName + "</td>" +
                                                     "<td>" + value.description + "</td>" +
                                                     "<td>" + value.worked_time + "</td>" +
                                                 "</tr>"
                                             totalTimeCount += value.worked_time;
                                         });
-                                        console.log(totalTimeCount);
+
                                         $('#reportResultTable tbody').html(html);
                                         $('#reportResultTable tfoot tr td span').text(totalTimeCount);
                                     });
@@ -102,7 +117,7 @@
                         <div class='col-sm-6'>
                             <div class="form-group">
                                 <label>To</label>
-                                <div class='input-group date datetimepicker'>
+                                <div class='input-group date datetimepickerTo'>
                                     <input type='text' class="form-control" name="dateTo"/>
                                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
@@ -142,16 +157,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($timesheet as $sheet)
-                        <tr>
-                            <td>{{$sheet->logged_date}}</td>
-                            <td>{{$user->name}}</td>
-                            <td>{{$sheet->project_id}}</td>
-                            <td>{{$sheet->category_id}}</td>
-                            <td>{{$sheet->description}}</td>
-                            <td>{{$sheet->worked_time}}</td>
-                        </tr>
-                    @endforeach
+
                     </tbody>
                     <tfoot>
                         <tr>

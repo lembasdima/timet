@@ -51,6 +51,7 @@ class TimeSheetsController extends Controller
 
     public function getDataToSave(Request $request){
 
+        var_dump($request->workedTime);
         if($request->id){
             DB::table('timesheet')
                 ->where([
@@ -61,7 +62,7 @@ class TimeSheetsController extends Controller
                 'project_id' => $request->project_id,
                 'category_id' => $request->category_id,
                 'description' => $request->description,
-                'worked_time' => (int) $request->workedTime
+                'worked_time' => $request->workedTime
             ]);
 
         }

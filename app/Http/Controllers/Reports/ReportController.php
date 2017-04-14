@@ -45,18 +45,7 @@ class ReportController extends AuthorizationController
         $categories->where([
             ['categories_users.company_id', Auth::user()->company_id]
         ]);
-/*
-        if((Auth::user()->hasRole(1) != true) || (Auth::user()->hasRole(2))!=true) {
-           var_dump(Auth::user()->role);
-            $users->where([
-                ['users.id', '=', Auth::user()->id]
-            ]);
 
-            $customers->where([
-                ['clients_users.company_id', Auth::user()->company_id]
-            ]);
-        }
-*/
         $timesheet = DB::table('timesheet')
             ->where('user_id', Auth::user()->id)
             ->get();
@@ -73,14 +62,40 @@ class ReportController extends AuthorizationController
 
     public function showReportResult(Request $request){
         //var_dump($request->all());
-        $result = DB::table('timesheet')
-            ->where('user_id', $request->userName)
-            ->where('project_id', $request->projectName)
-            ->where('category_id', $request->categoriesName)
-            ->whereBetween('logged_date', array($request->dateFrom, $request->dateTo))
-            ->get();
 
-        //return Response::json(array('result' => $result));
-        return response()->json(['result' => $result]);
+
+        if(empty($request->dateFrom)){
+            $request->dateFrom = date('Y-d-m');
+        }
+
+        if(empty($request->dateTo)){
+            $request->dateTo = date('Y-d-m');
+        }
+
+        $result = DB::table('timesheet')
+            ->join('users', 'timesheet.user_id', '=', 'users.id')
+            ->join('projects', 'timesheet.project_id', '=', 'projects.id')
+            ->join('categories', 'timesheet.category_id', '=', 'categories.id')
+            ->join('clients', 'projects.project_customer', '=', 'clients.id');
+
+        $result->where('users.company_id', Auth::user()->company_id);
+
+        if(!empty($request->userName)){
+            $result->where('timesheet.user_id', $request->userName);
+        }
+        if(!empty($request->projectName)) {
+            $result->where('timesheet.project_id', $request->projectName);
+        }
+        if(!empty($request->categoriesName)) {
+            $result->where('timesheet.category_id', $request->categoriesName);
+        }
+
+        $result->whereBetween('timesheet.logged_date', array($request->dateFrom, $request->dateTo));
+
+        $result->select('timesheet.*', 'clients.name as clientName', 'users.name as userName', 'projects.project_name as projectName', 'categories.name as categoryName');
+
+        $result->orderBy('timesheet.logged_date');
+
+        return response()->json(['result' => $result->get()]);
     }
 }
