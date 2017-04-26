@@ -52,4 +52,6 @@ Route::post('admin/saveClient', 'Admin\CustomerController@saveClient');
 Route::get('/reports', 'Reports\ReportController@showReport');
 Route::post('/showReportResult', 'Reports\ReportController@showReportResult');
 
+Route::get('/admin/settings', 'Admin\CompanyController@showSettings');
+
 

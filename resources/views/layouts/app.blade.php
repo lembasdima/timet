@@ -8,8 +8,12 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
+    <!--<title></title>-->
+    @if (!(Auth::guest()))
+        <title>{{DB::table('companies')->where('companies.id', Auth::user()->company_id)->value('name')}}</title>
+    @else
+        <title>{{ config('app.name', 'Page Title') }}</title>
+    @endif
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/bootstrap-datepaginator.css" rel="stylesheet">
