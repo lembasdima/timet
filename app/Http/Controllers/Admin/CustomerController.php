@@ -26,7 +26,7 @@ class CustomerController extends Controller
                 ->where('clients_users.user_id', $user_id)
                 ->get();
 
-            return view('admin\showClients', ['clients' => $clients]);
+            return view('/admin/showClients', ['clients' => $clients]);
         }
         return view('404');
     }
@@ -36,7 +36,7 @@ class CustomerController extends Controller
 
             $status = DB::table('statuses')->get();
 
-            return view('admin\addClient',['status' => $status]);
+            return view('/admin/addClient',['status' => $status]);
         }
         return view('404');
     }

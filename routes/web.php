@@ -46,7 +46,7 @@ Route::post('/admin/saveCategories', 'Admin\CategoryController@saveCategories');
 
 Route::get('/admin/showClients', 'Admin\CustomerController@showClients');
 Route::get('/admin/addClient', 'Admin\CustomerController@addClient');
-Route::post('admin/saveClient', 'Admin\CustomerController@saveClient');
+Route::post('/admin/saveClient', 'Admin\CustomerController@saveClient');
 
 
 Route::get('/reports', 'Reports\ReportController@showReport');
